@@ -1,5 +1,5 @@
 using Xunit;
-using ShoppingCartCalculator.Utils; // Or wherever your CategoryFactory lives
+using ShoppingCartCalculator.Models;
 
 namespace ShoppingCartCalculator.Tests
 {
