@@ -6,7 +6,7 @@ namespace ShoppingCartCalculator.Models
 
     // Represents a line item in the shopping cart
     // Contains properties for quantity, item name, price, and whether the item is imported
-      public class LineItem
+    public struct LineItem
     {
         [JsonPropertyName("name")]
         public string Name { get; set; }
@@ -23,13 +23,18 @@ namespace ShoppingCartCalculator.Models
 
     public class Item
     {
-        public string Name { get; set; }
-        public double Price { get; set; }
+        public string Name;
+        public double Price;
 
         public Item(string name,  double price)
         {
             Name = name;
             Price = price;
+        }
+
+        public string GetName()
+        {
+            return Name;
         }
 
         public double GetPrice()

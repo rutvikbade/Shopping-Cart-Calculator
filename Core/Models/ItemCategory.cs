@@ -1,46 +1,51 @@
-public enum ItemCategory
+namespace ShoppingCartCalculator.Models
 {
-    Book,
-    Food,
-    Medical,
-    Other
-}
 
-
-// This can be optimized further by using a dictionary to map keywords to categories.
-public static class CategoryFactory
-{
-    public static ItemCategory GetCategory(string keyword)
+    public enum ItemCategory
     {
-        if (string.IsNullOrWhiteSpace(keyword)) return ItemCategory.Other;
+        Book,
+        Food,
+        Medical,
+        Other
+    }
 
-        var lower = keyword.ToLower();
 
-        foreach (var pair in CategoryKeywords.Keywords)
+    // This can be optimized to O(N) by using a dictionary to map keywords to categories.
+    public static class CategoryFactory
+    {
+        public static ItemCategory GetCategory(string keyword)
         {
-            foreach (var kw in pair.Value)
+            if (string.IsNullOrWhiteSpace(keyword)) return ItemCategory.Other;
+
+            var lower = keyword.ToLower();
+
+            foreach (var pair in CategoryKeywords.Keywords)
             {
-                if (lower.Contains(kw))
-                    return pair.Key;
+                foreach (var kw in pair.Value)
+                {
+                    if (lower.Contains(kw))
+                        return pair.Key;
+                }
             }
+
+            return ItemCategory.Other;
         }
 
-        return ItemCategory.Other;
+        public static bool IsExempt(string keyword)
+        {
+            var category = GetCategory(keyword);
+            return category == ItemCategory.Book || category == ItemCategory.Food || category == ItemCategory.Medical;
+        }
     }
 
-    public static bool IsExempt(string keyword)
+    public static class CategoryKeywords
     {
-        var category = GetCategory(keyword);
-        return category == ItemCategory.Book || category == ItemCategory.Food || category == ItemCategory.Medical;
+        public static readonly Dictionary<ItemCategory, string[]> Keywords = new Dictionary<ItemCategory, string[]>
+        {
+            { ItemCategory.Book, new[] { "book" } },
+            { ItemCategory.Food, new[] { "chocolate", "chocolates", "chocolate bar" } },
+            { ItemCategory.Medical, new[] { "pill", "pills" } }
+        };
     }
-}
 
-public static class CategoryKeywords
-{
-    public static readonly Dictionary<ItemCategory, string[]> Keywords = new Dictionary<ItemCategory, string[]>
-    {
-        { ItemCategory.Book, new[] { "book" } },
-        { ItemCategory.Food, new[] { "chocolate", "chocolates", "chocolate bar" } },
-        { ItemCategory.Medical, new[] { "pill", "pills" } }
-    };
 }

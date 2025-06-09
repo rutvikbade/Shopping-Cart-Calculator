@@ -1,22 +1,37 @@
-using ShoppingCartCalculator.Cart;
 using ShoppingCartCalculator.Input.Utils;
 using ShoppingCartCalculator.Utils;
 using ShoppingCartCalculator.Models;
+using ShoppingCartCalculator.Interfaces;
 using System.Collections.Generic;
 
 namespace ShoppingCartCalculator.Services{
-    public static class TaxService
+    public class TaxService
     {
-        public static void ApplyTaxes(List<CartItem> items)
-        {
-            foreach (var item in items)
-            {
-                Console.WriteLine($"Processing item: {item.Name}");
-                double baseRate = CategoryFactory.IsExempt(item.Name) ? 0.0d : 0.10d;
-                double importRate = item.IsImported ? 0.05d : 0.0d;
+        private readonly IEnumerable<ITaxRule> _taxRules;
 
-                item.ApplyTax(baseRate, importRate);
-            }
+        public TaxService(IEnumerable<ITaxRule> taxRules)
+        {
+            _taxRules = taxRules;
         }
+
+        public double ApplyTaxes(List<CartItem> items)
+        {
+            double totalTax = 0d;
+            
+                foreach (var item in items)
+                {
+                    var rawItemTax = 0d;
+                    foreach (var rule in _taxRules)
+                    {
+                        var tax = rule.CalculateTax(item);
+                        rawItemTax += tax;
+                    }
+                    var netItemTax = RoundingHelper.RoundUpToNearest(rawItemTax);
+                    item.Tax = netItemTax; 
+                }
+
+            return RoundingHelper.RoundUpToNearest(totalTax);
+        }
+
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ShoppingCartCalculator.Utils;
 using ShoppingCartCalculator.Models;
 using ShoppingCartCalculator.Input.Utils;
-using ShoppingCartCalculator.Cart;
 using System.Text.Json;
 
 namespace ShoppingCartCalculator.Input

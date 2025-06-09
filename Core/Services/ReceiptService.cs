@@ -1,4 +1,4 @@
-using ShoppingCartCalculator.Cart;
+using ShoppingCartCalculator.Models;
 
 namespace ShoppingCartCalculator.Services{
     public static class ReceiptService
